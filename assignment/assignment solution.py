@@ -14,6 +14,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Load and clean the dataset
 df = pd.read_csv('USA_cars_datasets.csv')
@@ -95,3 +96,186 @@ print(f"Optimal k = {optimal_k} with MSE = {min_mse:.2f}")
 ## 6.
 # When k has a smaller value, the model closely fit the training data and producted very scattered preditions which shows sgn of overfitting.
 # When k has a larger value, the model is underfitting. Around k=50, it shows the best prediction accuracy because it is the optimal value of k.
+
+# Visualization Question 1
+
+## 1.
+df = pd.read_csv('college_completion.csv')
+
+## 2.
+print("Dataset dimensions (rows, columns):", df.shape)
+
+print("Number of observations:", df.shape[0])
+
+print("\nVariables included:")
+print(df.columns.tolist())
+
+print("\nFirst 5 rows of the dataset:")
+print(df.head())
+# The dimension for the dataset is (3798,63). There are a lot of included variable name. See printed output.
+
+## 3.
+crosstab = pd.crosstab(df['control'], df['level'])
+
+print(crosstab)
+
+# After cross tabulate control and level, it shows that public schools dominate 2 year space and private not for profit are mainly 4 year institution.
+# Private for profit have a almore even split between 2 year and 4 year.
+
+## 4.
+grad_data = pd.to_numeric(df['grad_100_value'], errors='coerce').dropna()
+
+# Histogram
+plt.figure(figsize=(8, 4))
+sns.histplot(grad_data, bins=30, kde=False)
+plt.title('Histogram of Graduation Rate (100% Time)')
+plt.xlabel('Graduation Rate (%)')
+plt.ylabel('Frequency')
+plt.grid(True)
+plt.show()
+
+# Kernel Density Plot
+plt.figure(figsize=(8, 4))
+sns.kdeplot(grad_data)
+plt.title('Kernel Density Estimate of Graduation Rate (100% Time)')
+plt.xlabel('Graduation Rate (%)')
+plt.ylabel('Density')
+plt.grid(True)
+plt.show()
+
+# Boxplot
+plt.figure(figsize=(8, 2))
+sns.boxplot(x=grad_data)
+plt.title('Boxplot of Graduation Rate (100% Time)')
+plt.xlabel('Graduation Rate (%)')
+plt.grid(True)
+plt.show()
+
+# Statistical Description
+print("Statistical Description of Graduation Rate (100% Time):")
+print(grad_data.describe())
+
+## 5.
+df['grad_100_value'] = pd.to_numeric(df['grad_100_value'], errors='coerce')
+
+# KDE plot by control
+plt.figure(figsize=(8, 5))
+sns.kdeplot(data=df, x='grad_100_value', hue='control', common_norm=False)
+plt.title('KDE of Graduation Rate by Control')
+plt.xlabel('Graduation Rate (%)')
+plt.ylabel('Density')
+plt.grid(True)
+plt.show()
+
+# KDE plot by level
+plt.figure(figsize=(8, 5))
+sns.kdeplot(data=df, x='grad_100_value', hue='level', common_norm=False)
+plt.title('KDE of Graduation Rate by Level')
+plt.xlabel('Graduation Rate (%)')
+plt.ylabel('Density')
+plt.grid(True)
+plt.show()
+
+# Grouped statistical description by control
+print("\nGrouped Summary by Control:")
+print(df.groupby('control')['grad_100_value'].describe())
+
+# Grouped statistical description by level
+print("\nGrouped Summary by Level:")
+print(df.groupby('level')['grad_100_value'].describe())
+
+# Private not for profit school with 4 year education have the highest graudation rates.
+
+## 6.
+df['levelXcontrol'] = df['level'] + ', ' + df['control']
+
+# KDE plot grouped by levelXcontrol
+plt.figure(figsize=(10, 6))
+sns.kdeplot(data=df, x='grad_100_value', hue='levelXcontrol', common_norm=False)
+plt.title('KDE of Graduation Rate by Level and Control')
+plt.xlabel('Graduation Rate (%)')
+plt.ylabel('Density')
+plt.grid(True)
+plt.show()
+
+# Private not for profit with 4 year institutions has the best graduation rate.
+
+## 7.
+# KDE plot of aid_value (overall)
+plt.figure(figsize=(8, 5))
+sns.kdeplot(data=df, x='aid_value')
+plt.title('KDE of Student Aid Value (Overall)')
+plt.xlabel('Average Aid Value ($)')
+plt.ylabel('Density')
+plt.grid(True)
+plt.show()
+
+# KDE plot grouped by level
+plt.figure(figsize=(8, 5))
+sns.kdeplot(data=df, x='aid_value', hue='level', common_norm=False)
+plt.title('KDE of Student Aid Value by Level')
+plt.xlabel('Average Aid Value ($)')
+plt.ylabel('Density')
+plt.grid(True)
+plt.show()
+
+# KDE plot grouped by control
+plt.figure(figsize=(8, 5))
+sns.kdeplot(data=df, x='aid_value', hue='control', common_norm=False)
+plt.title('KDE of Student Aid Value by Control')
+plt.xlabel('Average Aid Value ($)')
+plt.ylabel('Density')
+plt.grid(True)
+plt.show()
+
+# Grouped descriptive statistics
+print("Descriptive Statistics by Level:")
+print(df.groupby('level')['aid_value'].describe())
+
+print("\nDescriptive Statistics by Control:")
+print(df.groupby('control')['aid_value'].describe())
+
+# The shape of the graph is right skewed which shows that most institutions offer moderate aid. The long tail
+# of the graph streches the graph because there are some high value aid offered. KDE graph has a peak and right skewed.
+# KDE of student aid value by level shows that 4 year institution has wider variance, whereas 2 year college has a peak
+# between 0-10000.
+
+## 8.
+df['aid_value'] = pd.to_numeric(df['aid_value'], errors='coerce')
+df['grad_100_value'] = pd.to_numeric(df['grad_100_value'], errors='coerce')
+
+# Remove rows with missing values in either variable
+df_clean = df.dropna(subset=['aid_value', 'grad_100_value'])
+
+# 1. Overall scatterplot
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df_clean, x='aid_value', y='grad_100_value', alpha=0.6)
+plt.title('Graduation Rate vs. Student Aid (All Institutions)')
+plt.xlabel('Average Aid Value ($)')
+plt.ylabel('Graduation Rate (%)')
+plt.grid(True)
+plt.show()
+
+# 2. Scatterplot grouped by level
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df_clean, x='aid_value', y='grad_100_value', hue='level', alpha=0.6)
+plt.title('Graduation Rate vs. Student Aid by Level')
+plt.xlabel('Average Aid Value ($)')
+plt.ylabel('Graduation Rate (%)')
+plt.grid(True)
+plt.show()
+
+# 3. Scatterplot grouped by control
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df_clean, x='aid_value', y='grad_100_value', hue='control', alpha=0.6)
+plt.title('Graduation Rate vs. Student Aid by Control')
+plt.xlabel('Average Aid Value ($)')
+plt.ylabel('Graduation Rate (%)')
+plt.grid(True)
+plt.show()
+
+# The graph shows a general upward trend, as average student aid increases, graduation rates also tend to increase.
+# The relationship is also not perfectly linear because many institutions with low amount of air still have moderate graudation rates
+# Grouped by level, 2 year institutions are tightly clustered to the left low quadrant and 4 year institutions show a greater spread.
+# Grouped by control, private not for profit institution show the most strong positive association among all types. Private
+# for profit offers low aid and also have the lowest graudation rates.
