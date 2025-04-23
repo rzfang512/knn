@@ -1,10 +1,11 @@
 
-Q0.
-1. The difference between regress and  classification is that regression predicts a numeric outcome, whereas classification predicts a categorical outcome. 
-2. For classification, confusion table is a cross-tabulation of predicted and actual values. It helps us understand the performance of the model. 
-3. SSE is used to aggregate the squared errors into a single metric of fit. 
-4. Overfitting is when the model is too complex to reliably explain the phenomenon. On the other hand, underfiting occurs when the model is too simple to reliably explain the phenomenon. 
-5. Splitting the data into training and testing sets, and choosing by evaluating accuracy or SSE on the test set, improved model performance by prevents overfitting problems to quirks in the training set. 
+#Q0.
+#1. The difference between regress and  classification is that regression predicts a numeric outcome, whereas classification predicts a categorical outcome.
+#2. For classification, confusion table is a cross-tabulation of predicted and actual values. It helps us understand the performance of the model.
+#3. SSE is used to aggregate the squared errors into a single metric of fit.
+#4. Overfitting is when the model is too complex to reliably explain the phenomenon. On the other hand, underfiting occurs when the model is too simple to reliably explain the phenomenon.
+#5. Splitting the data into training and testing sets, and choosing by evaluating accuracy or SSE on the test set, improved model performance by prevents overfitting problems to quirks in the training set.
 With classification, we can report a class label as a prediction or a probability distribution over class labels. Please explain the strengths and weaknesses of each approach.
-6. Strength for reporting a class label as prediction is that it provides simple, straightforward decisions. However, the weaknes is there is no measure of confidence. 
+#6. Strength for reporting a class label as prediction is that it provides simple, straightforward decisions. However, the weaknes is there is no measure of confidence.
 Strengths for reporting class label as probability distribution are flexible decision rules and richer evaluation. The weaknesses are there is more complex output and still requires a final rule. 
+
